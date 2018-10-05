@@ -67,7 +67,8 @@ def getFeeds():
                 if filtrarFeeds([feedTitle,title,link]):
                     posts_to_print.append([feedTitle,title,link])
                     f.write(link + "\n")
-    # except:
+    except:
+        pass
     #     bot.send_message(meuId, "Erro na API YTS")
     
     for url in config.urls:
