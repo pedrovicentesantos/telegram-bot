@@ -16,8 +16,6 @@ DATABASE_URL = os.environ['DATABASE_URL']
 
 bot = telegram.Bot(TOKEN)
 
-posts_to_print = []
-
 def conectarDb():
     try:
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -69,8 +67,8 @@ def getFeeds():
                 if filtrarFeeds([feedTitle,title,link]):
                     posts_to_print.append([feedTitle,title,link])
                     f.write(link + "\n")
-    except:
-        bot.send_message(meuId, "Erro na API YTS")
+    # except:
+    #     bot.send_message(meuId, "Erro na API YTS")
     
     for url in config.urls:
         feed = feedparser.parse(url)
@@ -95,10 +93,10 @@ def getFeeds():
 startTime=time.time()
 bot.send_message(meuId, "Iniciando...")
 while True:
-    conn = conectarDb()
     getFeeds()
-    
-    for post in posts_to_print:
-        bot.send_message(meuId, post[0]+"\n\n"+post[1]+'\n'+post[2])
+    if (len(posts_to_print) > 0):
+        conn = conectarDb()
+        for post in posts_to_print:
+            bot.send_message(meuId, post[0]+"\n\n"+post[1]+'\n'+post[2])
     conn.close()
     time.sleep(300.0 - ((time.time() - startTime) % 60.0))
