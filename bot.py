@@ -78,8 +78,8 @@ def getFeeds():
 
         for post in feed.entries:
             # if post is already in the database, skip it
-            title = post.title
-            link = post.link
+            title = post['title']
+            link = post['link']
             feedTitle = feed.feed.title
             if not post_is_in_db(link):
                 if filtrarFeeds([feedTitle,title,link]):

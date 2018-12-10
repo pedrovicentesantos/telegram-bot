@@ -1,5 +1,5 @@
 urls = ['https://www.thepiratefilmeshd.com/feed/','http://legendas.tv/rss/destaques_series.rss','http://rmz.cr/feed']
-names = ['The Pirate Filmes HD','Legendas.tv - Destaques - Todos','RapidMoviez','YTS Feed']
+names = ['The Pirate Filmes HD','Legendas.tv - Destaques - Séries','RapidMoviez','YTS Feed']
 parameters={"quality": "1080p","limit": 50}
 yts = 'https://yts.am/api/v2/list_movies.json'
 
