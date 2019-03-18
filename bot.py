@@ -65,12 +65,12 @@ def pegarFeeds():
     f.close()          
 
 
-bot.send_message(config.meuId, "Iniciando...")
+bot.send_message(meuId, "Iniciando...")
 while True:
     pegarFeeds()
-    bot = telegram.Bot(config.TOKEN)
+    bot = telegram.Bot(TOKEN)
     for entrada in quais_enviar:
-        bot.send_message(config.meuId, entrada[1] + '\n' + entrada[2])
+        bot.send_message(meuId, entrada[1] + '\n' + entrada[2])
     #  A cada 20min (60*20)
     if time.localtime().tm_hour in [21,22,23,0,1,2,3,4,5,6,7,8]:
         time.sleep(1200)
