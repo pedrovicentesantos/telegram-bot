@@ -1,103 +1,79 @@
 import feedparser
-from subprocess import check_output
 import time 
-import sys
-import threading
-import requests
 import telegram
-import json
-import config
 import os
-import psycopg2
+import config
 
 TOKEN = os.environ.get('TOKEN')
 meuId = os.environ.get('meuId')
-DATABASE_URL = os.environ['DATABASE_URL']
 
+quais_enviar = []
 bot = telegram.Bot(TOKEN)
 
-def conectarDb():
-    try:
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-        return conn
-    except:
-        bot.send_message(meuId, "Não consegui conectar no BD")
+# Função que checa se um feed já foi enviado
 
-def post_is_in_db(link):
-    with open(config.db, 'r') as database:
-        for line in database:
-            if link in line:
+# Ou seja se ele já foi salvo no arquivo txt
+
+def foiEnviado(entrada):
+    with open(config.arquivo, 'r') as arquivo:
+        for line in arquivo:
+            if entrada in line:
                 return True
     return False
 
-def filtrarFeeds(post):
-    if post[0]==config.names[0]:
-        for dublado in config.dublados:
-            if dublado in post[1]:
+# Função que só pega os feeds que tenho interesse
+def filtrarFeeds(entrada):
+    nome_insensitive = entrada[1].lower()
+    if entrada[0] == config.names[0]:
+        for legenda in config.legendas:
+            if legenda in nome_insensitive:
                 return True
-    elif post[0]==config.names[1]:
+    elif entrada[0] == config.names[1]:
         for serie in config.series:
-            if serie in post[1]:
-                return True
-    elif post[0]==config.names[2]:
-        for serie in config.series:
-            if serie in post[1] and config.formato[0] in post[1] and config.formato[1] in post[1]:
-                return True
-    elif post[0]==config.names[3]:
-        for legendado in config.legendados:
-            if legendado in post[1]:
-                return True
+#             Se for Doom Patrol eu só procuro pelo formato 720p WEBRip HEVC x265-RMTeam
+            if serie == 'doom patrol':
+                if (serie in nome_insensitive and config.formato[2] in nome_insensitive):
+                    return True
+#             Nos outros casos faço procurando pelos outros dois formatos iniciais
+            else:
+                if (serie in nome_insensitive and config.formato[0] in nome_insensitive) or (serie in nome_insensitive and config.formato[1] in nome_insensitive):
+                    return True
     return False
             
-#
-# get the feed data from the url
-#
-def getFeeds():
-    f = open(config.db, 'a')
-    global posts_to_print
-    posts_to_print = []
-    try:
-        response = requests.get(config.yts,params=config.parameters)
-        data=response.json()
-        for dado in data["data"]["movies"]:
-            feedTitle=config.names[3]
-            title=dado["title"]
-            link=dado["url"]
-            if not post_is_in_db(link):
-                if filtrarFeeds([feedTitle,title,link]):
-                    posts_to_print.append([feedTitle,title,link])
-                    f.write(link + "\n")
-    except:
-        pass
-    #     bot.send_message(meuId, "Erro na API YTS")
+def pegarFeeds():
+    f = open(config.arquivo, 'a')
+    global quais_enviar
+    quais_enviar = []
     
     for url in config.urls:
         feed = feedparser.parse(url)
-        #
-        # figure out which posts to print
-
-        for post in feed.entries:
-            # if post is already in the database, skip it
-            title = post['title']
-            link = post['link']
+        
+        for entrada in feed.entries:
+            title = entrada.title
+            link = entrada.link
             feedTitle = feed.feed.title
-            if not post_is_in_db(link):
-                if filtrarFeeds([feedTitle,title,link]):
-                    posts_to_print.append([feedTitle,title,link])
-                    f.write(link + "\n")
+            data = entrada.published
+            
+            identificador = link+' '+data
+            
+            # Salvo no arquivo caso não tenha sido enviado ainda
+            if not foiEnviado(identificador):
+                if filtrarFeeds([feedTitle,title]):
+                    quais_enviar.append([feedTitle,title,link])
+                    f.write(identificador + "\n")
 
     f.close()          
-    #return posts_to_print
 
-#getFeeds()
 
-startTime=time.time()
-bot.send_message(meuId, "Iniciando...")
+bot.send_message(config.meuId, "Iniciando...")
 while True:
-    getFeeds()
-    if (len(posts_to_print) > 0):
-        conn = conectarDb()
-        for post in posts_to_print:
-            bot.send_message(meuId, post[0]+"\n\n"+post[1]+'\n'+post[2])
-    conn.close()
-    time.sleep(300.0 - ((time.time() - startTime) % 60.0))
+    pegarFeeds()
+    bot = telegram.Bot(config.TOKEN)
+    for entrada in quais_enviar:
+        bot.send_message(config.meuId, entrada[1] + '\n' + entrada[2])
+    #  A cada 20min (60*20)
+    if time.localtime().tm_hour in [21,22,23,0,1,2,3,4,5,6,7,8]:
+        time.sleep(1200)
+    #  A cada 1h (60*60)
+    else:
+        time.sleep(3600)

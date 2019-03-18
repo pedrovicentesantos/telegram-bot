@@ -1,11 +1,11 @@
-urls = ['https://www.thepiratefilmeshd.com/feed/','http://legendas.tv/rss/destaques_series.rss','http://rmz.cr/feed']
-names = ['The Pirate Filmes HD','Legendas.tv - Destaques - Séries','RapidMoviez','YTS Feed']
-parameters={"quality": "1080p","limit": 50}
-yts = 'https://yts.am/api/v2/list_movies.json'
+urls = ['http://legendas.tv/rss/destaques_series.rss','http://rmz.cr/feed']
+names = ['Legendas.tv - Destaques - Séries','RapidMoviez']
 
-series = ['Cloak','Theory','Horror','Sheldon','Affair','Suits', 'Gifted', 'Us', 'Empire', 'Modern','Murder','Flash','Supergirl','Arrow','Legends','Outlander','Vikings','Titans','Legacies']
-dublados = ['Incriveis','Hotel']
-legendados = ['Mamma','Ocean','Wasp','Disobedience']
-formato = ['720p','x265']
+series = ['legacies','the magicians','brooklyn','gotham', 'doom patrol','the good fight', 'this is us', 'empire', 'modern family','the flash','supergirl','arrow']
 
-db = 'feeds.db'
+legendas = ['this.is.us','supergirl','modern.family','the.magicians','gotham','legacies','brooklyn','arrow','the.flash','doom.patrol','empire','the.good.fight']
+
+formato = ['720p web hevc x265-rmteam','720p hdtv hevc x265-rmteam','720p webrip hevc x265-rmteam']
+# O formato 720p WEBRip HEVC x265-RMTeam é apenas para o Doom Patrol
+
+arquivo = 'feeds.txt'
