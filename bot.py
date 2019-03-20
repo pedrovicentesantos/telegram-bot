@@ -24,19 +24,18 @@ def foiEnviado(entrada):
 # Função que só pega os feeds que tenho interesse
 def filtrarFeeds(entrada):
     nome_insensitive = entrada[1].lower()
-    if entrada[0] == config.names[0]:
+    if entrada[0] == config.nomes_feeds[0]:
         for legenda in config.legendas:
             if legenda in nome_insensitive:
                 return True
-    elif entrada[0] == config.names[1]:
-        for serie in config.series:
-#             Se for Doom Patrol eu só procuro pelo formato 720p WEBRip HEVC x265-RMTeam
-            if serie == 'doom patrol':
-                if (serie in nome_insensitive and config.formato[2] in nome_insensitive):
+    elif entrada[0] == config.nomes_feeds[1]:
+        for serie in config.series_formato1:
+            for formato in config.formato1:
+                if (serie in nome_insensitive and formato in nome_insensitive):
                     return True
-#             Nos outros casos faço procurando pelos outros dois formatos iniciais
-            else:
-                if (serie in nome_insensitive and config.formato[0] in nome_insensitive) or (serie in nome_insensitive and config.formato[1] in nome_insensitive):
+        for serie in config.series_formato2:
+            for formato in config.formato2:
+                if (serie in nome_insensitive and formato in nome_insensitive):
                     return True
     return False
             
