@@ -46,7 +46,7 @@ def pegarFeeds():
     global quais_enviar
     quais_enviar = []
     
-    for url in config.urls:
+    for url in config.urls_feeds:
         feed = feedparser.parse(url)
         
         for entrada in feed.entries:
