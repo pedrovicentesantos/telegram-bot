@@ -4,6 +4,9 @@ import telegram
 import os
 import config
 
+from bs4 import BeautifulSoup
+import requests
+
 TOKEN = os.environ.get('TOKEN')
 meuId = os.environ.get('meuId')
 
@@ -29,8 +32,8 @@ def filtrarFeeds(entrada):
         for legenda in config.legendas:
             if legenda in nome_insensitive:
                 return True
-    # Se for do feed do rmz.cr
-    elif entrada[0] == config.urls_feeds[1]:
+    # Se for do site do rmz.cr
+    elif entrada[0] == config.urls_sites[0]:
         for serie in config.series_formato1:
             for formato in config.formato1:
                 if (serie in nome_insensitive and formato in nome_insensitive):
@@ -46,6 +49,7 @@ def pegarFeeds():
     global quais_enviar
     quais_enviar = []
     
+    # Caso seja feito pelo feed
     for url in config.urls_feeds:
         feed = feedparser.parse(url)
         
@@ -62,6 +66,24 @@ def pegarFeeds():
                 if filtrarFeeds([feedLink,title]):
                     quais_enviar.append([title,link])
                     f.write(identificador + "\n")
+
+    # Caso seja feito por web scraping
+    for url in config.urls_sites:
+        resposta = requests.get(url)
+        dados = resposta.text
+        soup = BeautifulSoup(dados, 'lxml')
+        
+        #Pego cada um dos links para os episodios dentro da caixa Latest Episodes
+        episodios = soup.select('.epicontainer ul li span .episize a')
+
+        for episodio in episodios:
+            titulo = episodio.get('title')
+            # O link só vem com o pedaço final, por isso preciso somar a url
+            link = url + episodio.get('href')
+            if not foiEnviado(link):
+                if filtrarFeeds([url,titulo]):
+                    quais_enviar.append([titulo,link])
+                    f.write(link + "\n")
 
     f.close()          
 

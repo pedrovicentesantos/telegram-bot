@@ -1,2 +1,4 @@
+requests==2.19.1
+beautifulsoup4==4.7.1
 feedparser==5.2.1
 python-telegram-bot==11.1.0
