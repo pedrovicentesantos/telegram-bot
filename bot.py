@@ -13,19 +13,6 @@ meuId = os.environ.get('meuId')
 quais_enviar = []
 bot = telegram.Bot(TOKEN)
 
-# Para fazer a conexão com o site do rmz quando ele usa a proteção ddos
-headers = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-'Accept-Encoding': 'gzip, deflate',
-'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
-'Cache-Control': 'max-age=0',
-'Connection': 'keep-alive',
-'Cookie': '__cfduid=d5459990e66ed72f7c7747e5264bc0e501541383850; HstCfa1606961=1541383851274; _ga=GA1.2.1275006512.1541383851; __dtsu=1EE70445C172465CD14B4E4702BBB269; HstCmu1606961=1552150651892; _gid=GA1.2.226368552.1554172346; rms3=a%3A5%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%22010b972b80501ff9b3285527ec396fb4%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A14%3A%22189.122.241.31%22%3Bs%3A10%3A%22user_agent%22%3Bs%3A120%3A%22Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F69.0.3497.100+Safari%2F537.36+OPR%2F%22%3Bs%3A13%3A%22last_activity%22%3Bi%3A1554390702%3Bs%3A9%3A%22user_data%22%3Bs%3A0%3A%22%22%3B%7D4f5c1acd725430de7aa9d977724e718cc2979e02; HstCnv1606961=169; HstCns1606961=224; HstCla1606961=1554390990903; HstPn1606961=3; HstPt1606961=550; cf_clearance=d17fae893605236ba089ac536b79ef06c231ac5e-1554395000-3600-150',
-'Host': 'rmz.cr',
-'Referer': 'http://rmz.cr/',
-'Upgrade-Insecure-Requests': '1',
-'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36 OPR/58.0.3135.127'
-}
-
 # Função que checa se um feed já foi enviado
 
 # Ou seja se ele já foi salvo no arquivo txt
@@ -83,7 +70,7 @@ def pegarFeeds():
     # Caso seja feito por web scraping
     for url in config.urls_sites:
         try:
-            resposta = requests.get(url, headers = headers)
+            resposta = requests.get(url)
             dados = resposta.text
             soup = BeautifulSoup(dados, 'lxml')
             
