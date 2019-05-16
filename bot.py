@@ -89,6 +89,7 @@ def pegarFeeds():
                         quais_enviar.append([titulo,link])
                         f.write(link + "\n")
         except:
+            resposta = scraper.get(url)
             bot.send_message(meuId, resposta)
 
     f.close()          
