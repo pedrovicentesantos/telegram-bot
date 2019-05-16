@@ -12,7 +12,7 @@ import cfscrape
 TOKEN = os.environ.get('TOKEN')
 meuId = os.environ.get('meuId')
 
-# quais_enviar = []
+quais_enviar = []
 bot = telegram.Bot(TOKEN)
 scraper = cfscrape.create_scraper()
 
@@ -106,4 +106,4 @@ while True:
     #  A cada 1h (60*60)
     # else:
     # A cada 1h sempre
-        time.sleep(3600)
+    time.sleep(3600)
