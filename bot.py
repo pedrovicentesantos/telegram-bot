@@ -89,7 +89,7 @@ def pegarFeeds():
                         quais_enviar.append([titulo,link])
                         f.write(link + "\n")
         except:
-            pass
+            bot.send_message(meuId, resposta)
 
     f.close()          
 
