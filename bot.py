@@ -7,11 +7,14 @@ import config
 from bs4 import BeautifulSoup
 import requests
 
+import cfscrape
+
 TOKEN = os.environ.get('TOKEN')
 meuId = os.environ.get('meuId')
 
-quais_enviar = []
+# quais_enviar = []
 bot = telegram.Bot(TOKEN)
+scraper = cfscrape.create_scraper()
 
 # Função que checa se um feed já foi enviado
 
@@ -70,7 +73,7 @@ def pegarFeeds():
     # Caso seja feito por web scraping
     for url in config.urls_sites:
         try:
-            resposta = requests.get(url)
+            resposta = scraper.get(url)
             dados = resposta.text
             soup = BeautifulSoup(dados, 'lxml')
             
@@ -98,8 +101,9 @@ while True:
     for entrada in quais_enviar:
         bot.send_message(meuId, entrada[0] + '\n' + entrada[1])
     #  A cada 20min (60*20)
-    if time.localtime().tm_hour in [21,22,23,0,1,2,3,4,5,6,7,8]:
-        time.sleep(1200)
+    # if time.localtime().tm_hour in [21,22,23,0,1,2,3,4,5,6,7,8]:
+        # time.sleep(1200)
     #  A cada 1h (60*60)
-    else:
+    # else:
+    # A cada 1h sempre
         time.sleep(3600)
