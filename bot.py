@@ -106,5 +106,5 @@ while True:
         # time.sleep(1200)
     #  A cada 1h (60*60)
     # else:
-    # A cada 1h sempre
-    time.sleep(3600)
+    # A cada 2h sempre
+    time.sleep(7200)
